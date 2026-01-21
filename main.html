@@ -84,19 +84,19 @@
 
     <main class="container mx-auto px-4 py-8 md:py-12">
         
-        <form id="formularzForm" class="max-w-5xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-100">
+        <form id="formularzForm" class="max-w-5xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden border border-slate-100" aria-describedby="formIntro" novalidate>
             
             <div class="bg-slate-50 px-8 py-6 border-b border-slate-100">
-                <p class="text-slate-600 text-sm">Wypełnij poniższe dane, aby wygenerować umowę dzierżawy. Pola oznaczone gwiazdką (*) są obowiązkowe.</p>
+                <p id="formIntro" class="text-slate-600 text-sm">Wypełnij poniższe dane, aby wygenerować umowę dzierżawy. Pola oznaczone gwiazdką (*) są obowiązkowe.</p>
             </div>
 
             <div class="p-6 md:p-10 space-y-10">
 
-                <section>
-                    <label class="block text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Krok 1: Wybierz typ klienta *</label>
+                <fieldset id="clientTypeFieldset" class="space-y-4" aria-describedby="clientTypeError" aria-required="true">
+                    <legend class="block text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Krok 1: Wybierz typ klienta *</legend>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <label class="cursor-pointer group relative">
-                            <input type="radio" name="clientType" value="firma" class="peer sr-only" onchange="toggleClientType()" required>
+                            <input type="radio" id="clientTypeFirma" name="clientType" value="firma" class="peer sr-only" onchange="toggleClientType()" aria-describedby="clientTypeError" required>
                             <div class="p-6 rounded-xl border-2 border-slate-200 bg-white hover:border-red-300 transition-all duration-300 peer-checked:border-red-600 peer-checked:bg-red-50/50 peer-checked:shadow-lg flex items-center gap-4">
                                 <div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-2xl group-hover:bg-red-100 transition-colors peer-checked:bg-red-100 peer-checked:text-red-600">
                                     🏢
@@ -110,7 +110,7 @@
                         </label>
 
                         <label class="cursor-pointer group relative">
-                            <input type="radio" name="clientType" value="osoba" class="peer sr-only" onchange="toggleClientType()" required>
+                            <input type="radio" id="clientTypeOsoba" name="clientType" value="osoba" class="peer sr-only" onchange="toggleClientType()" aria-describedby="clientTypeError" required>
                             <div class="p-6 rounded-xl border-2 border-slate-200 bg-white hover:border-red-300 transition-all duration-300 peer-checked:border-red-600 peer-checked:bg-red-50/50 peer-checked:shadow-lg flex items-center gap-4">
                                 <div class="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-2xl group-hover:bg-red-100 transition-colors peer-checked:bg-red-100 peer-checked:text-red-600">
                                     👤
@@ -123,7 +123,8 @@
                             </div>
                         </label>
                     </div>
-                </section>
+                    <p id="clientTypeError" class="text-sm text-red-600 hidden" role="alert" aria-live="polite"></p>
+                </fieldset>
 
                 <hr class="border-slate-100">
 
@@ -135,15 +136,16 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
                         <div class="group">
-                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1 ml-1">NIP *</label>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1 ml-1" for="nipInput">NIP *</label>
                             <div class="relative">
-                                <input type="text" name="nip" id="nipInput" onblur="pobierzDaneFirmyZGUS()" 
-                                    class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block p-3 input-modern placeholder-slate-400" placeholder="np. 1234567890">
+                                <input type="text" name="nip" id="nipInput" onblur="pobierzDaneFirmyZGUS()" autocomplete="tax-id" inputmode="numeric" pattern="\\d{10}"
+                                    class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block p-3 input-modern placeholder-slate-400" placeholder="np. 1234567890" aria-describedby="nipStatus nipError">
                                 <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
                                     🔍
                                 </div>
                             </div>
-                            <span id="nipStatus" class="text-xs text-slate-500 mt-1 block h-4"></span>
+                            <span id="nipStatus" class="text-xs text-slate-500 mt-1 block h-4" role="status" aria-live="polite"></span>
+                            <span id="nipError" class="text-xs text-red-600 mt-1 block hidden" role="alert" aria-live="polite"></span>
                         </div>
                         <div>
                             <label class="block text-xs font-semibold text-slate-500 uppercase mb-1 ml-1">REGON</label>
@@ -159,18 +161,21 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1 ml-1">Osoba upoważniona *</label>
-                            <input type="text" name="authorizedPerson" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block p-3 input-modern">
+                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1 ml-1" for="authorizedPerson">Osoba upoważniona *</label>
+                            <input type="text" name="authorizedPerson" id="authorizedPerson" autocomplete="name" aria-describedby="authorizedPersonError" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block p-3 input-modern" required>
+                            <span id="authorizedPersonError" class="text-xs text-red-600 mt-1 block hidden" role="alert" aria-live="polite"></span>
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1 ml-1">Telefon *</label>
-                            <input type="tel" name="phone" placeholder="+48..." class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block p-3 input-modern">
+                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1 ml-1" for="companyPhone">Telefon *</label>
+                            <input type="tel" name="phone" id="companyPhone" placeholder="+48 123 456 789" autocomplete="tel" inputmode="tel" aria-describedby="companyPhoneError" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block p-3 input-modern" required>
+                            <span id="companyPhoneError" class="text-xs text-red-600 mt-1 block hidden" role="alert" aria-live="polite"></span>
                         </div>
                     </div>
                     
                     <div class="mb-8">
-                        <label class="block text-xs font-semibold text-slate-500 uppercase mb-1 ml-1">E-mail do faktur *</label>
-                        <input type="email" name="invoiceEmail" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block p-3 input-modern">
+                        <label class="block text-xs font-semibold text-slate-500 uppercase mb-1 ml-1" for="invoiceEmail">E-mail do faktur *</label>
+                        <input type="email" name="invoiceEmail" id="invoiceEmail" autocomplete="email" aria-describedby="invoiceEmailError" placeholder="np. faktury@firma.pl" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block p-3 input-modern" required>
+                        <span id="invoiceEmailError" class="text-xs text-red-600 mt-1 block hidden" role="alert" aria-live="polite"></span>
                     </div>
 
                     <div class="bg-slate-50/80 rounded-xl p-5 border border-slate-200/60">
@@ -179,9 +184,9 @@
                             Osoba wnioskująca (opcjonalne)
                         </h4>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <input type="text" name="applicantNameCompany" placeholder="Imię i nazwisko" class="w-full bg-white border border-slate-200 text-sm rounded-lg p-2.5 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none transition-colors">
-                            <input type="tel" name="applicantPhoneCompany" placeholder="Telefon" class="w-full bg-white border border-slate-200 text-sm rounded-lg p-2.5 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none transition-colors">
-                            <input type="email" name="applicantEmailCompany" placeholder="E-mail" class="w-full bg-white border border-slate-200 text-sm rounded-lg p-2.5 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none transition-colors">
+                            <input type="text" name="applicantNameCompany" placeholder="Imię i nazwisko" aria-label="Osoba wnioskująca - imię i nazwisko" class="w-full bg-white border border-slate-200 text-sm rounded-lg p-2.5 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none transition-colors">
+                            <input type="tel" name="applicantPhoneCompany" placeholder="Telefon" aria-label="Osoba wnioskująca - telefon" class="w-full bg-white border border-slate-200 text-sm rounded-lg p-2.5 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none transition-colors">
+                            <input type="email" name="applicantEmailCompany" placeholder="E-mail" aria-label="Osoba wnioskująca - e-mail" class="w-full bg-white border border-slate-200 text-sm rounded-lg p-2.5 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none transition-colors">
                         </div>
                     </div>
                 </div>
@@ -194,20 +199,24 @@
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1 ml-1">Imię i nazwisko *</label>
-                            <input type="text" name="fullName" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block p-3 input-modern">
+                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1 ml-1" for="fullName">Imię i nazwisko *</label>
+                            <input type="text" name="fullName" id="fullName" autocomplete="name" aria-describedby="fullNameError" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block p-3 input-modern" required>
+                            <span id="fullNameError" class="text-xs text-red-600 mt-1 block hidden" role="alert" aria-live="polite"></span>
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1 ml-1">PESEL</label>
-                            <input type="text" name="pesel" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block p-3 input-modern">
+                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1 ml-1" for="pesel">PESEL</label>
+                            <input type="text" name="pesel" id="pesel" inputmode="numeric" pattern="\\d{11}" aria-describedby="peselError" placeholder="11 cyfr" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block p-3 input-modern">
+                            <span id="peselError" class="text-xs text-red-600 mt-1 block hidden" role="alert" aria-live="polite"></span>
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1 ml-1">Telefon *</label>
-                            <input type="tel" name="phonePrivate" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block p-3 input-modern">
+                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1 ml-1" for="phonePrivate">Telefon *</label>
+                            <input type="tel" name="phonePrivate" id="phonePrivate" autocomplete="tel" inputmode="tel" aria-describedby="phonePrivateError" placeholder="+48 123 456 789" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block p-3 input-modern" required>
+                            <span id="phonePrivateError" class="text-xs text-red-600 mt-1 block hidden" role="alert" aria-live="polite"></span>
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1 ml-1">E-mail *</label>
-                            <input type="email" name="emailPrivate" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block p-3 input-modern">
+                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1 ml-1" for="emailPrivate">E-mail *</label>
+                            <input type="email" name="emailPrivate" id="emailPrivate" autocomplete="email" aria-describedby="emailPrivateError" placeholder="np. jan.kowalski@email.pl" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-red-500 focus:border-red-500 block p-3 input-modern" required>
+                            <span id="emailPrivateError" class="text-xs text-red-600 mt-1 block hidden" role="alert" aria-live="polite"></span>
                         </div>
                     </div>
 
@@ -217,39 +226,40 @@
                             Osoba wnioskująca (opcjonalne)
                         </h4>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <input type="text" name="applicantName" placeholder="Imię i nazwisko" class="w-full bg-white border border-slate-200 text-sm rounded-lg p-2.5 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none transition-colors">
-                            <input type="tel" name="applicantPhone" placeholder="Telefon" class="w-full bg-white border border-slate-200 text-sm rounded-lg p-2.5 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none transition-colors">
-                            <input type="email" name="applicantEmail" placeholder="E-mail" class="w-full bg-white border border-slate-200 text-sm rounded-lg p-2.5 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none transition-colors">
+                            <input type="text" name="applicantName" placeholder="Imię i nazwisko" aria-label="Osoba wnioskująca - imię i nazwisko" class="w-full bg-white border border-slate-200 text-sm rounded-lg p-2.5 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none transition-colors">
+                            <input type="tel" name="applicantPhone" placeholder="Telefon" aria-label="Osoba wnioskująca - telefon" class="w-full bg-white border border-slate-200 text-sm rounded-lg p-2.5 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none transition-colors">
+                            <input type="email" name="applicantEmail" placeholder="E-mail" aria-label="Osoba wnioskująca - e-mail" class="w-full bg-white border border-slate-200 text-sm rounded-lg p-2.5 focus:border-red-500 focus:ring-1 focus:ring-red-500 outline-none transition-colors">
                         </div>
                     </div>
                 </div>
 
-                <section>
-                    <label class="block text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Region inwestycji *</label>
+                <fieldset id="regionFieldset" class="space-y-4" aria-describedby="regionError" aria-required="true">
+                    <legend class="block text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Region inwestycji *</legend>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
                         <label class="cursor-pointer group">
-                            <input type="radio" name="region" value="Kraków" class="peer sr-only" required>
+                            <input type="radio" id="regionKrakow" name="region" value="Kraków" class="peer sr-only" aria-describedby="regionError" required>
                             <div class="p-4 rounded-lg border border-slate-200 hover:border-red-300 bg-white transition-all text-center peer-checked:border-red-600 peer-checked:bg-red-50 peer-checked:text-red-700">
                                 <div class="text-2xl mb-2 grayscale group-hover:grayscale-0 peer-checked:grayscale-0 transition-all"></div>
                                 <span class="font-semibold">Kraków</span>
                             </div>
                         </label>
                         <label class="cursor-pointer group">
-                            <input type="radio" name="region" value="Śląsk" class="peer sr-only" required>
+                            <input type="radio" id="regionSlask" name="region" value="Śląsk" class="peer sr-only" aria-describedby="regionError" required>
                             <div class="p-4 rounded-lg border border-slate-200 hover:border-red-300 bg-white transition-all text-center peer-checked:border-red-600 peer-checked:bg-red-50 peer-checked:text-red-700">
                                 <div class="text-2xl mb-2 grayscale group-hover:grayscale-0 peer-checked:grayscale-0 transition-all"></div>
                                 <span class="font-semibold">Śląsk</span>
                             </div>
                         </label>
                         <label class="cursor-pointer group">
-                            <input type="radio" name="region" value="Łódź" class="peer sr-only" required>
+                            <input type="radio" id="regionLodz" name="region" value="Łódź" class="peer sr-only" aria-describedby="regionError" required>
                             <div class="p-4 rounded-lg border border-slate-200 hover:border-red-300 bg-white transition-all text-center peer-checked:border-red-600 peer-checked:bg-red-50 peer-checked:text-red-700">
                                 <div class="text-2xl mb-2 grayscale group-hover:grayscale-0 peer-checked:grayscale-0 transition-all"></div>
                                 <span class="font-semibold">Łódź</span>
                             </div>
                         </label>
                     </div>
-                </section>
+                    <p id="regionError" class="text-sm text-red-600 hidden" role="alert" aria-live="polite"></p>
+                </fieldset>
 
                 <section>
                     <div class="flex items-center gap-3 mb-6">
@@ -259,23 +269,26 @@
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1 ml-1">Nazwa inwestycji *</label>
-                            <input type="text" name="investmentName" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-slate-800 focus:border-slate-800 block p-3 input-modern" required>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1 ml-1" for="investmentName">Nazwa inwestycji *</label>
+                            <input type="text" name="investmentName" id="investmentName" autocomplete="organization" aria-describedby="investmentNameError" placeholder="np. Budowa hali logistycznej" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-slate-800 focus:border-slate-800 block p-3 input-modern" required>
+                            <span id="investmentNameError" class="text-xs text-red-600 mt-1 block hidden" role="alert" aria-live="polite"></span>
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1 ml-1">Adres budowy *</label>
-                            <input type="text" name="constructionAddress" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-slate-800 focus:border-slate-800 block p-3 input-modern" required>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1 ml-1" for="constructionAddress">Adres budowy *</label>
+                            <input type="text" name="constructionAddress" id="constructionAddress" autocomplete="street-address" aria-describedby="constructionAddressError" placeholder="Ulica, numer, miasto" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-slate-800 focus:border-slate-800 block p-3 input-modern" required>
+                            <span id="constructionAddressError" class="text-xs text-red-600 mt-1 block hidden" role="alert" aria-live="polite"></span>
                         </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1 ml-1">Data rozpoczęcia *</label>
-                            <input type="date" name="startDate" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-slate-800 focus:border-slate-800 block p-3 input-modern" required>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1 ml-1" for="startDate">Data rozpoczęcia *</label>
+                            <input type="date" name="startDate" id="startDate" aria-describedby="startDateError" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-slate-800 focus:border-slate-800 block p-3 input-modern" required>
+                            <span id="startDateError" class="text-xs text-red-600 mt-1 block hidden" role="alert" aria-live="polite"></span>
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1 ml-1">Przewidywany okres *</label>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1 ml-1" for="rentalPeriod">Przewidywany okres *</label>
                             <div class="relative">
-                                <select name="rentalPeriod" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-slate-800 focus:border-slate-800 block p-3 appearance-none input-modern" required>
+                                <select name="rentalPeriod" id="rentalPeriod" aria-describedby="rentalPeriodError" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-slate-800 focus:border-slate-800 block p-3 appearance-none input-modern" required>
                                     <option value="">Wybierz okres</option>
                                     <option value="8 dni">8 dni</option>
                                     <option value="10-15 dni">10-15 dni</option>
@@ -287,6 +300,7 @@
                                     <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
                                 </div>
                             </div>
+                            <span id="rentalPeriodError" class="text-xs text-red-600 mt-1 block hidden" role="alert" aria-live="polite"></span>
                         </div>
                     </div>
                 </section>
@@ -301,27 +315,28 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1 ml-1">Nazwa wykonawcy *</label>
-                            <input type="text" name="contractorName" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-slate-800 focus:border-slate-800 block p-3 input-modern" required>
+                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1 ml-1" for="contractorName">Nazwa wykonawcy *</label>
+                            <input type="text" name="contractorName" id="contractorName" aria-describedby="contractorNameError" placeholder="np. Firma budowlana XYZ" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-slate-800 focus:border-slate-800 block p-3 input-modern" required>
+                            <span id="contractorNameError" class="text-xs text-red-600 mt-1 block hidden" role="alert" aria-live="polite"></span>
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1 ml-1">Osoba kontaktowa</label>
-                            <input type="text" name="contactPerson" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-slate-800 focus:border-slate-800 block p-3 input-modern">
+                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1 ml-1" for="contactPerson">Osoba kontaktowa</label>
+                            <input type="text" name="contactPerson" id="contactPerson" autocomplete="name" placeholder="Imię i nazwisko" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-slate-800 focus:border-slate-800 block p-3 input-modern">
                         </div>
                     </div>
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                         <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1 ml-1">Telefon</label>
-                            <input type="tel" name="contractorPhone" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-slate-800 focus:border-slate-800 block p-3 input-modern">
+                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1 ml-1" for="contractorPhone">Telefon</label>
+                            <input type="tel" name="contractorPhone" id="contractorPhone" autocomplete="tel" placeholder="+48 123 456 789" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-slate-800 focus:border-slate-800 block p-3 input-modern">
                         </div>
                         <div>
-                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1 ml-1">Telefon na budowę</label>
-                            <input type="tel" name="constructionPhone" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-slate-800 focus:border-slate-800 block p-3 input-modern">
+                            <label class="block text-xs font-semibold text-slate-500 uppercase mb-1 ml-1" for="constructionPhone">Telefon na budowę</label>
+                            <input type="tel" name="constructionPhone" id="constructionPhone" autocomplete="tel" placeholder="+48 123 456 789" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-slate-800 focus:border-slate-800 block p-3 input-modern">
                         </div>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-500 uppercase mb-1 ml-1">Dodatkowe informacje</label>
-                        <textarea name="contractorNotes" rows="2" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-slate-800 focus:border-slate-800 block p-3 input-modern transition-all"></textarea>
+                        <label class="block text-xs font-semibold text-slate-500 uppercase mb-1 ml-1" for="contractorNotes">Dodatkowe informacje</label>
+                        <textarea name="contractorNotes" id="contractorNotes" rows="2" placeholder="Np. preferowane godziny kontaktu" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-slate-800 focus:border-slate-800 block p-3 input-modern transition-all"></textarea>
                     </div>
                 </section>
 
@@ -333,11 +348,11 @@
                             <h3 class="text-lg font-bold text-slate-700">Inwestor</h3>
                         </div>
                         <div class="space-y-4">
-                            <input type="text" name="investorName" placeholder="Nazwa inwestora" class="w-full bg-slate-50 border border-slate-200 text-sm rounded-lg p-3 focus:ring-slate-800 focus:border-slate-800 outline-none">
-                            <input type="text" name="investorNip" placeholder="NIP" class="w-full bg-slate-50 border border-slate-200 text-sm rounded-lg p-3 focus:ring-slate-800 focus:border-slate-800 outline-none">
+                            <input type="text" name="investorName" placeholder="Nazwa inwestora" aria-label="Nazwa inwestora" class="w-full bg-slate-50 border border-slate-200 text-sm rounded-lg p-3 focus:ring-slate-800 focus:border-slate-800 outline-none">
+                            <input type="text" name="investorNip" placeholder="NIP" aria-label="NIP inwestora" class="w-full bg-slate-50 border border-slate-200 text-sm rounded-lg p-3 focus:ring-slate-800 focus:border-slate-800 outline-none">
                             <div class="grid grid-cols-2 gap-4">
-                                <input type="tel" name="investorPhone" placeholder="Telefon" class="w-full bg-slate-50 border border-slate-200 text-sm rounded-lg p-3 focus:ring-slate-800 focus:border-slate-800 outline-none">
-                                <input type="email" name="investorEmail" placeholder="E-mail" class="w-full bg-slate-50 border border-slate-200 text-sm rounded-lg p-3 focus:ring-slate-800 focus:border-slate-800 outline-none">
+                                <input type="tel" name="investorPhone" placeholder="Telefon" aria-label="Telefon inwestora" class="w-full bg-slate-50 border border-slate-200 text-sm rounded-lg p-3 focus:ring-slate-800 focus:border-slate-800 outline-none">
+                                <input type="email" name="investorEmail" placeholder="E-mail" aria-label="E-mail inwestora" class="w-full bg-slate-50 border border-slate-200 text-sm rounded-lg p-3 focus:ring-slate-800 focus:border-slate-800 outline-none">
                             </div>
                         </div>
                     </section>
@@ -348,9 +363,9 @@
                             <h3 class="text-lg font-bold text-slate-700">Generalny Wykonawca</h3>
                         </div>
                         <div class="space-y-4">
-                            <input type="text" name="generalContractorName" placeholder="Nazwa GW" class="w-full bg-slate-50 border border-slate-200 text-sm rounded-lg p-3 focus:ring-slate-800 focus:border-slate-800 outline-none">
-                            <input type="text" name="generalContractorNip" placeholder="NIP GW" class="w-full bg-slate-50 border border-slate-200 text-sm rounded-lg p-3 focus:ring-slate-800 focus:border-slate-800 outline-none">
-                            <input type="tel" name="generalContractorPhone" placeholder="Telefon" class="w-full bg-slate-50 border border-slate-200 text-sm rounded-lg p-3 focus:ring-slate-800 focus:border-slate-800 outline-none">
+                            <input type="text" name="generalContractorName" placeholder="Nazwa GW" aria-label="Nazwa generalnego wykonawcy" class="w-full bg-slate-50 border border-slate-200 text-sm rounded-lg p-3 focus:ring-slate-800 focus:border-slate-800 outline-none">
+                            <input type="text" name="generalContractorNip" placeholder="NIP GW" aria-label="NIP generalnego wykonawcy" class="w-full bg-slate-50 border border-slate-200 text-sm rounded-lg p-3 focus:ring-slate-800 focus:border-slate-800 outline-none">
+                            <input type="tel" name="generalContractorPhone" placeholder="Telefon" aria-label="Telefon generalnego wykonawcy" class="w-full bg-slate-50 border border-slate-200 text-sm rounded-lg p-3 focus:ring-slate-800 focus:border-slate-800 outline-none">
                         </div>
                     </section>
                 </div>
@@ -362,10 +377,10 @@
                             <h3 class="text-lg font-bold text-slate-700">Kierownik budowy</h3>
                         </div>
                         <div class="space-y-4">
-                            <input type="text" name="constructionManagerName" placeholder="Imię i nazwisko" class="w-full bg-slate-50 border border-slate-200 text-sm rounded-lg p-3 focus:ring-slate-800 focus:border-slate-800 outline-none">
+                            <input type="text" name="constructionManagerName" placeholder="Imię i nazwisko" aria-label="Kierownik budowy - imię i nazwisko" class="w-full bg-slate-50 border border-slate-200 text-sm rounded-lg p-3 focus:ring-slate-800 focus:border-slate-800 outline-none">
                             <div class="grid grid-cols-2 gap-4">
-                                <input type="tel" name="constructionManagerPhone" placeholder="Telefon" class="w-full bg-slate-50 border border-slate-200 text-sm rounded-lg p-3 focus:ring-slate-800 focus:border-slate-800 outline-none">
-                                <input type="email" name="constructionManagerEmail" placeholder="E-mail" class="w-full bg-slate-50 border border-slate-200 text-sm rounded-lg p-3 focus:ring-slate-800 focus:border-slate-800 outline-none">
+                                <input type="tel" name="constructionManagerPhone" placeholder="Telefon" aria-label="Kierownik budowy - telefon" class="w-full bg-slate-50 border border-slate-200 text-sm rounded-lg p-3 focus:ring-slate-800 focus:border-slate-800 outline-none">
+                                <input type="email" name="constructionManagerEmail" placeholder="E-mail" aria-label="Kierownik budowy - e-mail" class="w-full bg-slate-50 border border-slate-200 text-sm rounded-lg p-3 focus:ring-slate-800 focus:border-slate-800 outline-none">
                             </div>
                         </div>
                     </section>
@@ -375,13 +390,13 @@
                             <span class="flex items-center justify-center w-6 h-6 rounded-full bg-slate-200 text-slate-700 font-bold text-xs">7</span>
                             <h3 class="text-lg font-bold text-slate-700">Uwagi / Zapotrzebowanie</h3>
                         </div>
-                        <textarea name="requirements" rows="4" placeholder="Opisz potrzeby..." class="w-full bg-slate-50 border border-slate-200 text-sm rounded-lg p-3 focus:ring-slate-800 focus:border-slate-800 outline-none resize-none"></textarea>
+                        <textarea name="requirements" rows="4" placeholder="Opisz potrzeby..." aria-label="Uwagi lub zapotrzebowanie" class="w-full bg-slate-50 border border-slate-200 text-sm rounded-lg p-3 focus:ring-slate-800 focus:border-slate-800 outline-none resize-none"></textarea>
                     </section>
                 </div>
 
                 <section>
-                    <label class="block text-xs font-semibold text-slate-500 uppercase mb-1 ml-1">8. Skąd kontakt do ABC Szalunki</label>
-                    <input type="text" name="contactSource" placeholder="np. strona internetowa, polecenie, reklama" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-slate-800 focus:border-slate-800 block p-3 input-modern">
+                    <label class="block text-xs font-semibold text-slate-500 uppercase mb-1 ml-1" for="contactSource">8. Skąd kontakt do ABC Szalunki</label>
+                    <input type="text" name="contactSource" id="contactSource" placeholder="np. strona internetowa, polecenie, reklama" class="w-full bg-slate-50 border border-slate-200 text-slate-900 text-sm rounded-lg focus:ring-slate-800 focus:border-slate-800 block p-3 input-modern">
                 </section>
 
                 <div class="bg-slate-50 rounded-xl p-6 border border-slate-100">
@@ -396,18 +411,19 @@
 
                     <label class="flex items-start cursor-pointer group">
                         <div class="relative flex items-center">
-                            <input type="checkbox" name="dataConsent" required class="peer sr-only">
+                            <input type="checkbox" name="dataConsent" id="dataConsent" required class="peer sr-only" aria-describedby="dataConsentError">
                             <div class="w-5 h-5 border-2 border-slate-300 rounded bg-white peer-checked:bg-red-600 peer-checked:border-red-600 transition-all"></div>
                             <svg class="absolute w-3 h-3 text-white hidden peer-checked:block left-1 top-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>
                         </div>
                         <span class="ml-3 text-xs text-slate-600 group-hover:text-slate-800 transition-colors">Potwierdzam zgodność danych do umowy i wyrażam zgodę na przetwarzanie moich danych osobowych zgodnie z powyższą informacją. *</span>
                     </label>
+                    <p id="dataConsentError" class="text-xs text-red-600 mt-2 hidden" role="alert" aria-live="polite"></p>
                 </div>
 
-                <div id="statusMessage" class="hidden p-4 rounded-lg text-sm font-medium text-center animate-pulse"></div>
+                <div id="statusMessage" class="hidden p-4 rounded-lg text-sm font-medium text-center" role="status" aria-live="polite"></div>
 
                 <div class="pt-4 pb-2 text-center">
-                    <button type="button" onclick="submitForm()" 
+                    <button type="submit" id="submitButton"
                         class="group relative inline-flex items-center justify-center px-10 py-4 text-lg font-bold text-white transition-all duration-200 bg-gradient-to-r from-red-600 to-red-700 rounded-xl hover:from-red-500 hover:to-red-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-600 shadow-lg shadow-red-600/30 hover:shadow-red-600/40 hover:-translate-y-1 w-full md:w-auto">
                         <span class="mr-2">📄</span>
                         Wyślij formularz
@@ -436,9 +452,16 @@
             const regonInput = document.getElementById('regonInput');
             const krsInput = document.getElementById('krsInput');
             const nipStatus = document.getElementById('nipStatus');
+            const nipError = document.getElementById('nipError');
+            if (nipError) {
+                nipError.textContent = '';
+                nipError.classList.add('hidden');
+            }
             
             // Pobierz i wyczyść NIP
             let nip = nipInput.value.replace(/[-\s]/g, '');
+            nip = sanitizeValue(nip);
+            nipInput.value = nip;
             
             // Walidacja NIP
             if (!nip || nip.length === 0) {
@@ -448,6 +471,7 @@
             if (!/^\d{10}$/.test(nip)) {
                 nipStatus.textContent = '⚠️ NIP musi składać się z 10 cyfr';
                 nipStatus.className = 'text-xs text-red-600';
+                setFieldError(FIELD_CONFIG.nip, 'NIP musi składać się z 10 cyfr.');
                 return;
             }
             
@@ -641,6 +665,11 @@
                     }
                 });
             }
+            const form = document.getElementById('formularzForm');
+            if (form) {
+                form.addEventListener('submit', submitForm);
+            }
+            attachFieldListeners();
         });
 
         function toggleClientType() {
@@ -655,6 +684,251 @@
                 osobaSection.classList.remove('hidden');
                 firmaSection.classList.add('hidden');
             }
+
+            validateField('clientType', clientType, clientType);
+            validateField('nip', sanitizeValue(document.getElementById('nipInput')?.value || ''), clientType);
+            validateField('authorizedPerson', sanitizeValue(document.getElementById('authorizedPerson')?.value || ''), clientType);
+            validateField('phone', sanitizeValue(document.getElementById('companyPhone')?.value || ''), clientType);
+            validateField('invoiceEmail', sanitizeValue(document.getElementById('invoiceEmail')?.value || ''), clientType);
+            validateField('fullName', sanitizeValue(document.getElementById('fullName')?.value || ''), clientType);
+            validateField('pesel', sanitizeValue(document.getElementById('pesel')?.value || ''), clientType);
+            validateField('phonePrivate', sanitizeValue(document.getElementById('phonePrivate')?.value || ''), clientType);
+            validateField('emailPrivate', sanitizeValue(document.getElementById('emailPrivate')?.value || ''), clientType);
+        }
+
+        const PHONE_PATTERN = /^[+\d][\d\s-]{8,}$/;
+        const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const TEXT_SANITIZE_PATTERN = /[<>"'&]/g;
+
+        const FIELD_CONFIG = {
+            clientType: {
+                fieldsetId: 'clientTypeFieldset',
+                errorId: 'clientTypeError',
+                required: true,
+                message: 'Wybierz typ klienta.'
+            },
+            region: {
+                fieldsetId: 'regionFieldset',
+                errorId: 'regionError',
+                required: true,
+                message: 'Wybierz region inwestycji.'
+            },
+            nip: {
+                inputId: 'nipInput',
+                errorId: 'nipError',
+                required: true,
+                pattern: /^\d{10}$/,
+                message: 'Wpisz NIP firmy (10 cyfr).'
+            },
+            authorizedPerson: {
+                inputId: 'authorizedPerson',
+                errorId: 'authorizedPersonError',
+                required: true,
+                message: 'Wpisz osobę upoważnioną.'
+            },
+            phone: {
+                inputId: 'companyPhone',
+                errorId: 'companyPhoneError',
+                required: true,
+                pattern: PHONE_PATTERN,
+                message: 'Podaj poprawny numer telefonu.'
+            },
+            invoiceEmail: {
+                inputId: 'invoiceEmail',
+                errorId: 'invoiceEmailError',
+                required: true,
+                pattern: EMAIL_PATTERN,
+                message: 'Podaj poprawny adres e-mail.'
+            },
+            fullName: {
+                inputId: 'fullName',
+                errorId: 'fullNameError',
+                required: true,
+                message: 'Wpisz imię i nazwisko.'
+            },
+            pesel: {
+                inputId: 'pesel',
+                errorId: 'peselError',
+                pattern: /^\d{11}$/,
+                message: 'PESEL musi mieć 11 cyfr.'
+            },
+            phonePrivate: {
+                inputId: 'phonePrivate',
+                errorId: 'phonePrivateError',
+                required: true,
+                pattern: PHONE_PATTERN,
+                message: 'Podaj poprawny numer telefonu.'
+            },
+            emailPrivate: {
+                inputId: 'emailPrivate',
+                errorId: 'emailPrivateError',
+                required: true,
+                pattern: EMAIL_PATTERN,
+                message: 'Podaj poprawny adres e-mail.'
+            },
+            investmentName: {
+                inputId: 'investmentName',
+                errorId: 'investmentNameError',
+                required: true,
+                message: 'Wpisz nazwę inwestycji.'
+            },
+            constructionAddress: {
+                inputId: 'constructionAddress',
+                errorId: 'constructionAddressError',
+                required: true,
+                message: 'Wpisz adres budowy.'
+            },
+            startDate: {
+                inputId: 'startDate',
+                errorId: 'startDateError',
+                required: true,
+                message: 'Wybierz datę rozpoczęcia.'
+            },
+            rentalPeriod: {
+                inputId: 'rentalPeriod',
+                errorId: 'rentalPeriodError',
+                required: true,
+                message: 'Wybierz przewidywany okres.'
+            },
+            contractorName: {
+                inputId: 'contractorName',
+                errorId: 'contractorNameError',
+                required: true,
+                message: 'Wpisz nazwę wykonawcy.'
+            },
+            dataConsent: {
+                inputId: 'dataConsent',
+                errorId: 'dataConsentError',
+                required: true,
+                message: 'Musisz wyrazić zgodę na przetwarzanie danych osobowych.'
+            }
+        };
+
+        function sanitizeValue(value) {
+            if (typeof value !== 'string') return value;
+            return value.replace(TEXT_SANITIZE_PATTERN, '').trim();
+        }
+
+        function setFieldError(config, message = '') {
+            if (config.fieldsetId) {
+                const fieldset = document.getElementById(config.fieldsetId);
+                if (fieldset) {
+                    fieldset.setAttribute('aria-invalid', message ? 'true' : 'false');
+                }
+            }
+
+            if (config.inputId) {
+                const input = document.getElementById(config.inputId);
+                if (input) {
+                    input.setAttribute('aria-invalid', message ? 'true' : 'false');
+                }
+            }
+
+            if (config.errorId) {
+                const errorEl = document.getElementById(config.errorId);
+                if (errorEl) {
+                    errorEl.textContent = message;
+                    errorEl.classList.toggle('hidden', !message);
+                }
+            }
+        }
+
+        function getClientType() {
+            return document.querySelector('input[name="clientType"]:checked')?.value;
+        }
+
+        function validateField(key, value, clientType) {
+            const config = FIELD_CONFIG[key];
+            if (!config) return true;
+
+            if (key === 'nip') {
+                if (clientType !== 'firma') {
+                    setFieldError(config);
+                    return true;
+                }
+                if (!value) {
+                    setFieldError(config, config.message);
+                    return false;
+                }
+            }
+
+            if (['authorizedPerson', 'phone', 'invoiceEmail'].includes(key) && clientType !== 'firma') {
+                setFieldError(config);
+                return true;
+            }
+
+            if (['fullName', 'phonePrivate', 'emailPrivate', 'pesel'].includes(key) && clientType !== 'osoba') {
+                setFieldError(config);
+                return true;
+            }
+
+            if (config.required && !value) {
+                setFieldError(config, config.message);
+                return false;
+            }
+
+            if (value && config.pattern && !config.pattern.test(value)) {
+                setFieldError(config, config.message);
+                return false;
+            }
+
+            setFieldError(config);
+            return true;
+        }
+
+        function validateForm(formData) {
+            const clientType = formData.clientType;
+            const errors = [];
+
+            Object.keys(FIELD_CONFIG).forEach((key) => {
+                const value = formData[key];
+                const isValid = validateField(key, value, clientType);
+                if (!isValid && FIELD_CONFIG[key].message) {
+                    errors.push(FIELD_CONFIG[key].message);
+                }
+            });
+
+            return {
+                isValid: errors.length === 0,
+                errors
+            };
+        }
+
+        function attachFieldListeners() {
+            Object.values(FIELD_CONFIG).forEach((config) => {
+                if (config.inputId) {
+                    const input = document.getElementById(config.inputId);
+                    if (input) {
+                        input.addEventListener('input', () => {
+                            const clientType = getClientType();
+                            const value = sanitizeValue(input.value);
+                            if (input.value !== value) {
+                                input.value = value;
+                            }
+                            validateField(input.name, value, clientType);
+                        });
+                        input.addEventListener('blur', () => {
+                            const clientType = getClientType();
+                            validateField(input.name, sanitizeValue(input.value), clientType);
+                        });
+                        if (input.type === 'checkbox') {
+                            input.addEventListener('change', () => {
+                                const clientType = getClientType();
+                                validateField(input.name, input.checked ? input.value : '', clientType);
+                            });
+                        }
+                    }
+                }
+            });
+
+            ['clientType', 'region'].forEach((name) => {
+                document.querySelectorAll(`input[name="${name}"]`).forEach((input) => {
+                    input.addEventListener('change', () => {
+                        const clientType = getClientType();
+                        validateField(name, sanitizeValue(input.value), clientType);
+                    });
+                });
+            });
         }
 
         function collectFormData() {
@@ -662,9 +936,9 @@
             const inputs = document.querySelectorAll('input, textarea, select');
             inputs.forEach(input => {
                 if (input.type === 'radio' || input.type === 'checkbox') {
-                    if (input.checked) formData[input.name] = input.value;
+                    if (input.checked) formData[input.name] = sanitizeValue(input.value);
                 } else {
-                    formData[input.name] = input.value || '';
+                    formData[input.name] = sanitizeValue(input.value || '');
                 }
             });
             return formData;
@@ -915,22 +1189,26 @@
             statusEl.textContent = message;
         }
 
-        async function submitForm() {
-            const button = event.target;
+        async function submitForm(event) {
+            event?.preventDefault();
+            const button = document.getElementById('submitButton');
             const originalText = button.innerHTML;
             button.innerHTML = '⏳ Przetwarzanie...';
             button.disabled = true;
 
             try {
                 const formData = collectFormData();
+                const validation = validateForm(formData);
 
-                // Walidacja
-                if (!formData.clientType) throw new Error('Wybierz typ dzierżawcy');
-                if (!formData.region) throw new Error('Wybierz region');
-                if (!formData.dataConsent) throw new Error('Musisz wyrazić zgodę na przetwarzanie danych osobowych');
-                if (!formData.investmentName) throw new Error('Wpisz nazwę inwestycji');
-                if (!formData.constructionAddress) throw new Error('Wpisz adres budowy');
-                if (!formData.contractorName) throw new Error('Wpisz nazwę wykonawcy');
+                if (!validation.isValid) {
+                    const firstErrorField = document.querySelector('[aria-invalid="true"]');
+                    const focusTarget = firstErrorField?.matches('fieldset')
+                        ? firstErrorField.querySelector('input')
+                        : firstErrorField;
+                    focusTarget?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    focusTarget?.focus();
+                    throw new Error(validation.errors[0] || 'Nieprawidłowe dane w formularzu.');
+                }
 
                 showStatus('📄 Generowanie PDF z polskimi znakami (ą, ć, ę, ł, ń, ó, ś, ź, ż)...', 'info');
 
@@ -962,10 +1240,10 @@
             } catch (error) {
                 console.error('Błąd:', error);
                 showStatus('⚠️ ' + error.message, 'error');
+            } finally {
+                button.innerHTML = originalText;
+                button.disabled = false;
             }
-
-            button.innerHTML = originalText;
-            button.disabled = false;
         }
     </script>
 </body>
